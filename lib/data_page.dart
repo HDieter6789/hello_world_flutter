@@ -10,52 +10,68 @@ class DataPage extends StatefulWidget {
 }
 
 class _DataPageState extends State<DataPage> {
-  List<dynamic> countries = [];
+  List<dynamic> users = [];
   bool isLoading = true;
+  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-    fetchCountries();
+    fetchUsers();
   }
 
-  Future<void> fetchCountries() async {
-    final url = Uri.parse('https://restcountries.com/v3.1/all');
-    final response = await http.get(url);
+  Future<void> fetchUsers() async {
+    final url = Uri.parse('https://jsonplaceholder.typicode.com/users');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          users = data;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Fehler beim Laden (Status: ${response.statusCode})';
+        });
+      }
+    } catch (e) {
       setState(() {
-        countries = data;
         isLoading = false;
+        errorMessage = 'Netzwerkfehler: $e';
       });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      throw Exception('Fehler beim Laden der Daten');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Länderdaten')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-        itemCount: countries.length,
-        itemBuilder: (context, index) {
-          final country = countries[index];
-          final name = country['name']?['common'] ?? 'Unbekannt';
-          final capital = (country['capital'] != null && country['capital'] is List)
-              ? country['capital'][0]
-              : 'Keine Hauptstadt';
-          return ListTile(
-            title: Text(name),
-            subtitle: Text('Hauptstadt: $capital'),
-          );
-        },
+      appBar: AppBar(
+        title: const Text('Nutzerdaten'),
+      ),
+      body: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : errorMessage != null
+            ? Text(errorMessage!)
+            : ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final user = users[index];
+            return ListTile(
+              title: Text(user['name']),
+              subtitle: Text(user['email']),
+            );
+          },
+        ),
       ),
     );
   }
