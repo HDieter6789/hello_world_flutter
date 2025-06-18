@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'data_page.dart'; // <--- wichtig: neue Seite importieren
+import 'data_page.dart';
+import 'search_result_page.dart';
+import 'base_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,25 +27,28 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Kein AppBar, damit keine Überschrift angezeigt wird
-      body: SafeArea(
-        child: Center(
+    return BasePage(
+      child: Center(
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              const FlutterLogo(size: 120),
+              Image.asset(
+                'assets/Logo HOT GMBH.png',
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      content: const Text("Hallo Welt!"),
+                      content: const Text('Hallo Welt!'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("OK"),
+                          child: const Text('OK'),
                         ),
                       ],
                     ),
@@ -56,7 +61,9 @@ class MyHomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const DataPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const DataPage(),
+                    ),
                   );
                 },
                 child: const Text('Daten anzeigen'),
