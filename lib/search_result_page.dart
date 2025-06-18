@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SearchResultPage extends StatelessWidget {
-  const SearchResultPage({super.key});
+  final String? query;
+
+  const SearchResultPage({super.key, this.query});
 
   @override
   Widget build(BuildContext context) {
@@ -9,10 +11,13 @@ class SearchResultPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Suchergebnis'),
       ),
-      body: const Center(
+      body: Center(
         child: Text(
-          'Hallo Welt',
-          style: TextStyle(fontSize: 28),
+          query != null && query!.isNotEmpty
+              ? 'Ergebnisse für: "$query"'
+              : 'Hallo Welt',
+          style: const TextStyle(fontSize: 28),
+          textAlign: TextAlign.center,
         ),
       ),
     );

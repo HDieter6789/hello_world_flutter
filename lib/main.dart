@@ -25,9 +25,30 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
+  void _showMessage(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Hello World – $text')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BasePage(
+      actions: [
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert, color: Colors.blue),
+          onSelected: (value) => _showMessage(context, value),
+          itemBuilder: (BuildContext context) {
+            return ['Service', 'Einstellungen', 'Version', 'Profil']
+                .map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+      ],
       child: Center(
         child: SingleChildScrollView(
           child: Column(
