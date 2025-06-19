@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:window_size/window_size.dart';
+import 'dart:io';
+
 import 'data_page.dart';
 import 'search_result_page.dart';
 import 'base_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('Demo App');
+    setWindowMinSize(const Size(800, 600));
+    setWindowMaxSize(Size.infinite);
+  }
+
   runApp(const MyApp());
 }
 
@@ -49,47 +60,56 @@ class MyHomePage extends StatelessWidget {
           },
         ),
       ],
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset(
-                'assets/Logo HOT GMBH.png',
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      content: const Text('Hallo Welt!'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                child: const Text('Klick mich!'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DataPage(),
-                    ),
-                  );
-                },
-                child: const Text('Daten anzeigen'),
-              ),
-            ],
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Colors.blueAccent],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/Logo HOT GMBH.png',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        content: const Text('Hallo Welt!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: const Text('Klick mich!'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DataPage(),
+                      ),
+                    );
+                  },
+                  child: const Text('Daten anzeigen'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
