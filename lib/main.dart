@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:window_size/window_size.dart';
-import 'dart:io';
-
 import 'data_page.dart';
 import 'search_result_page.dart';
 import 'base_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Demo App');
-    setWindowMinSize(const Size(800, 600));
-    setWindowMaxSize(Size.infinite);
-  }
-
+void main() {
   runApp(const MyApp());
 }
 
@@ -26,8 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Demo App',
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
   }
@@ -63,9 +54,9 @@ class MyHomePage extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
+            colors: [Colors.white, Colors.blueAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.blueAccent],
           ),
         ),
         child: Center(

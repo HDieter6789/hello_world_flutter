@@ -14,38 +14,34 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Hintergrund mit Verlauf
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.white, Colors.blueAccent],
-                ),
-              ),
-            ),
+      extendBodyBehindAppBar: true, // ← damit der Verlauf hinter die Suchleiste reicht
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.blueAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-
-          // Inhalt
-          Column(
+        ),
+        child: SafeArea(
+          child: Column(
             children: [
-              const SizedBox(height: 40), // Platz für Statusleiste
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Row(
                   children: [
                     Expanded(
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Suche...',
-                          prefixIcon: const Icon(Icons.search),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.white.withOpacity(0.3), // halbtransparent
+                          hintText: 'Suche...',
+                          prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                          hintStyle: const TextStyle(color: Colors.black54),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.all(10),
                         ),
@@ -53,8 +49,7 @@ class BasePage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  SearchResultPage(query: value),
+                              builder: (context) => SearchResultPage(query: value),
                             ),
                           );
                         },
@@ -76,11 +71,10 @@ class BasePage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
               Expanded(child: child),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
