@@ -14,7 +14,7 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // ← damit der Verlauf hinter die Suchleiste reicht
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       body: Container(
         decoration: const BoxDecoration(
@@ -35,7 +35,7 @@ class BasePage extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.3), // halbtransparent
+                          fillColor: Colors.white.withOpacity(0.3),
                           hintText: 'Suche...',
                           prefixIcon: const Icon(Icons.search, color: Colors.black54),
                           hintStyle: const TextStyle(color: Colors.black54),
