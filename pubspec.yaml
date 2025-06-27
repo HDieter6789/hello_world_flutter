@@ -10,9 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6
   cupertino_icons: ^1.0.8
-  window_size: ^0.1.0 # Nur für Windows/macOS/Linux
+  http: ^0.13.6
+  fl_chart: ^0.64.0
+  window_size: ^0.1.0 # nur für Windows/macOS/Linux
 
 dev_dependencies:
   flutter_test:
