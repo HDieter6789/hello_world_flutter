@@ -7,6 +7,8 @@ import 'notifications_page.dart';
 import 'map_page.dart';
 import 'chat_page.dart';
 
+export 'main.dart' show MainNavigation;
+
 void main() {
   runApp(const MyApp());
 }
