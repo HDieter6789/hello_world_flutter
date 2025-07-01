@@ -7,11 +7,21 @@ import 'map_page.dart';
 import 'notifications_page.dart';
 import 'chat_page.dart';
 import 'base_page.dart';
+import 'notifications_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final notificationsProvider = NotificationsProvider();
+  await notificationsProvider.loadCommitCount();
+  await notificationsProvider.loadBadge();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => notificationsProvider),
+      ],
       child: const MyApp(),
     ),
   );
@@ -73,45 +83,6 @@ class _MainNavigationState extends State<MainNavigation> {
     });
   }
 
-  void _showPopup(BuildContext context, String title) {
-    if (title == 'Einstellungen') {
-      showDialog(
-        context: context,
-        builder: (_) => const SettingsPopup(),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (_) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            width: 300,
-            height: 200,
-            child: Stack(
-              children: [
-                Center(
-                  child: Text(
-                    'Hello World',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,13 +110,45 @@ class _MainNavigationState extends State<MainNavigation> {
             selectedItemColor: Colors.blue.shade800,
             unselectedItemColor: Colors.blue.shade200,
             showUnselectedLabels: true,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Start'),
-              BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoriten'),
-              BottomNavigationBarItem(icon: Icon(Icons.storage), label: 'Daten'),
-              BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Mitteilungen'),
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-              BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+            items: [
+              const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Start'),
+              const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoriten'),
+              const BottomNavigationBarItem(icon: Icon(Icons.storage), label: 'Daten'),
+              BottomNavigationBarItem(
+                icon: Stack(
+                  children: [
+                    const Icon(Icons.notifications),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Consumer<NotificationsProvider>(
+                        builder: (_, provider, __) {
+                          if (provider.badgeCount == 0) return const SizedBox.shrink();
+                          return Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                            child: Text(
+                              '${provider.badgeCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                label: 'Mitteilungen',
+              ),
+              const BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+              const BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
             ],
           ),
         ),
